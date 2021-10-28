@@ -26,6 +26,7 @@
         <h1 class="text-center">Welcome to Library</h1>
         <hr />
         <br />
+        <h4 id="accountType" style="text-align: right; font-weight: bold; color: rgba(219, 40, 27, 0.918)"></h4>
         <div id="loader">
           <p class="text-center">Loading...</p>
         </div>
@@ -48,7 +49,7 @@
         <div id="user" style="display: none;">
           <form onSubmit="App.checkoutBook(); return false;">
             <div class="form-group">
-              <label for="candidatesSelect">Select Book to Check-out</label>
+              <label for="checkoutBookSelect">Select Book to Check-out</label>
               <select class="form-control" id="checkoutBook">
               </select>
             </div>
@@ -57,7 +58,7 @@
           </form>
           <form onSubmit="App.returnBook(); return false;">
             <div class="form-group">
-              <label for="candidatesSelect">Select Book to Return</label>
+              <label for="returnBookSelect">Select Book to Return</label>
               <select class="form-control" id="returnBook">
               </select>
             </div>
@@ -69,12 +70,12 @@
         <h3 class="text-center">Manage Book Archive...</h2>
           <form onSubmit="App.addBook(); return false;">
             <div class="form-group">
-              <label for="candidatesSelect">Add Book</label>
+              <label for="addBook">Add Book</label>
               <hr />
-              <label for="candidatesSelect">Book Name</label>
+              <label for="addBookNameInput">Book Name</label>
               <input class="form-control" id="addBookName">
               </input>
-              <label for="candidatesSelect">Author Name</label>
+              <label for="addAuthorNameInput">Author Name</label>
               <input class="form-control" id="addAuthorName">
               </input>
             </div>
@@ -83,7 +84,7 @@
           </form>
           <form onSubmit="App.removeBook(); return false;">
             <div class="form-group">
-              <label for="candidatesSelect">Select Book to Remove from Database</label>
+              <label for="removeBookSelect">Select Book to Remove from Database</label>
               <select class="form-control" id="removeBook">
               </select>
             </div>

@@ -11,15 +11,7 @@ contract Library{
     }
 
     mapping(uint => Book) public books;
-    mapping(address => uint[]) private checkedOutBooks;
     uint public numBooks;
-    // Book[] public curUserBooks;
-    // uint public numCurUserBooks;
-
-    // // transaction event
-    // event transactionEvent (
-    //     uint bookID
-    // );
 
     constructor() public{
         addBook("The Alchemist", "Paulo Coelho");
@@ -48,67 +40,25 @@ contract Library{
         --numBooks;
     }
 
-    // function getBooksForUser () public{
-    //     delete curUserBooks;
-    //     numCurUserBooks = 0;
-    //     uint[] memory curUserBookIds = checkedOutBooks[msg.sender];
-    //     for (uint i=0; i<curUserBookIds.length; i++) {
-    //         Book memory curBook = books[curUserBookIds[i]];
-    //         curUserBooks.push(curBook);
-    //         ++numCurUserBooks;
-    //     }
-    // }
-
     function checkout (uint _bookID) public{
         // make sure book is available
         require(books[_bookID].isAvailable);
 
-        // // record that the current user has checked out the book
-        // checkedOutBooks[msg.sender].push(_bookID);
-
-        // // update status of book
-        // books[_bookID].isAvailable = false;
-
-        // // checkout complete
-        // emit transactionEvent(_bookID);
-
+        // update status of book
         books[_bookID].isAvailable = false;
+
+        // record that the current user has checked out the book
         books[_bookID].user = msg.sender;
     }
 
     function returnBook (uint _bookID) public{
-        // // make sure book is checked out by user
-        // uint i = findCheckedOutBook(_bookID, msg.sender);
-        // require(i < checkedOutBooks[msg.sender].length);
-
-        // // remove the book from user's book list
-        // removeByIndex(i, msg.sender);
-
-        // // set state of book as available
-        // books[_bookID].isAvailable = true;
-
-        // // checkout complete
-        // emit transactionEvent(_bookID);
-
+        // make sure book is checked out by user
         require(!books[_bookID].isAvailable && books[_bookID].user == msg.sender);
 
+        // set state of book as available
         books[_bookID].isAvailable = true;
+
+        // record that the current user has returned the book
         books[_bookID].user = 0x0000000000000000000000000000000000000000;
     }
-
-    // function findCheckedOutBook(uint _value, address user) private returns(uint){
-    //     uint i = 0;
-    //     while (checkedOutBooks[user][i] != _value) {
-    //         i++;
-    //     }
-    //     return i;
-    // }
-
-    // function removeByIndex(uint i, address user) private {
-    //     while (i<checkedOutBooks[user].length-1) {
-    //         checkedOutBooks[user][i] = checkedOutBooks[user][i+1];
-    //         i++;
-    //     }
-    //     delete curUserBooks[curUserBooks.length - 1];
-    // }
 }
