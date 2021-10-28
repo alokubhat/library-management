@@ -3,6 +3,7 @@ App = {
   contracts: {},
   account: '0x0',
   hasVoted: false,
+  adminAcc: 0xf98403a6b19a1721fd28125d5a4d231e0060b3d2,
 
   init: function() {
     return App.initWeb3();
@@ -91,6 +92,8 @@ App = {
       var removeBookSelect = $('#removeBook');
       removeBookSelect.empty();
 
+      //var adminAcc = 0x0000000000000000000000000000000000000000;
+
       for (var i = 1; i <= numBooks; i++) {
         libraryInstance.books(i, { from: App.account }).then(function(book) {
           var id = book[0];
@@ -105,7 +108,28 @@ App = {
           var bookRow = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + author + "</td><td>" + isAvailable + "</td></tr>"
           bookList.append(bookRow);
           
-          if (0xf98403a6b19a1721fd28125d5a4d231e0060b3d2 != App.account) {
+          // Get admin user
+          // const fs = require('./../admin.json');
+          // fs.readFile('./../admin.json', 'utf8', function(err, contents) {
+          //   if (err) {
+          //     // we have a problem because the Error object was returned
+          //   } else {
+          //     const data = JSON.parse(contents);
+          //     adminAcc = data['admin-private-key'];
+          //     // for (key in data) {
+          //     //   if (data.hasOwnProperty(key)) {
+          //     //       adminAcc = data[key];
+          //     //   }
+          //     // }
+          //   }
+          // });
+          // for(var attributename in myobject){
+          //   if('admin-private-key' == attributename){
+          //     adminAcc = myobject[attributename];
+          //   }
+          // }
+
+          if (App.adminAcc != App.account) {
             if (true == book[3]) {
               // Render Checkout Book List
               var checkoutBookOption = "<option value='" + id + "' >" + name + " - " + author + "</ option>"
@@ -125,7 +149,7 @@ App = {
         });
       }
 
-      if (0xf98403a6b19a1721fd28125d5a4d231e0060b3d2 != App.account) {
+      if (App.adminAcc != App.account) {
         userControls.show();
         adminControls.hide();
       }
