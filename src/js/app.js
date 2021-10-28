@@ -2,7 +2,6 @@ App = {
   web3Provider: null,
   contracts: {},
   account: '0x0',
-  hasVoted: false,
   adminAcc: 0xf98403a6b19a1721fd28125d5a4d231e0060b3d2,
 
   init: function() {
@@ -32,26 +31,7 @@ App = {
       // Connect provider to interact with contract
       App.contracts.Library.setProvider(App.web3Provider);
 
-      //App.listenForEvents();
-
       return App.render();
-    });
-  },
-
-  // Listen for events emitted from the contract
-  listenForEvents: function() {
-    App.contracts.Library.deployed().then(function(instance) {
-      // Restart Chrome if you are unable to receive this event
-      // This is a known issue with Metamask
-      // https://github.com/MetaMask/metamask-extension/issues/2393
-      instance.transactionEvent({}, {
-        fromBlock: 0,
-        toBlock: 'latest'
-      }).watch(function(error, event) {
-        console.log("event triggered", event)
-        // Reload when a new vote is recorded
-        App.render();
-      });
     });
   },
 
@@ -72,6 +52,14 @@ App = {
       if (err === null) {
         App.account = account;
         $("#accountAddress").html("Your Account: " + account);
+
+        if (App.adminAcc != App.account){
+          $("#accountType").html("USER ACCOUNT");
+        }
+        else{
+          $("#accountType").html("ADMIN ACCOUNT");
+        }
+        
       }
     });
 
@@ -92,8 +80,6 @@ App = {
       var removeBookSelect = $('#removeBook');
       removeBookSelect.empty();
 
-      //var adminAcc = 0x0000000000000000000000000000000000000000;
-
       for (var i = 1; i <= numBooks; i++) {
         libraryInstance.books(i, { from: App.account }).then(function(book) {
           var id = book[0];
@@ -107,27 +93,6 @@ App = {
           // Render Book List
           var bookRow = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + author + "</td><td>" + isAvailable + "</td></tr>"
           bookList.append(bookRow);
-          
-          // Get admin user
-          // const fs = require('./../admin.json');
-          // fs.readFile('./../admin.json', 'utf8', function(err, contents) {
-          //   if (err) {
-          //     // we have a problem because the Error object was returned
-          //   } else {
-          //     const data = JSON.parse(contents);
-          //     adminAcc = data['admin-private-key'];
-          //     // for (key in data) {
-          //     //   if (data.hasOwnProperty(key)) {
-          //     //       adminAcc = data[key];
-          //     //   }
-          //     // }
-          //   }
-          // });
-          // for(var attributename in myobject){
-          //   if('admin-private-key' == attributename){
-          //     adminAcc = myobject[attributename];
-          //   }
-          // }
 
           if (App.adminAcc != App.account) {
             if (true == book[3]) {
@@ -157,19 +122,6 @@ App = {
         userControls.hide();
         adminControls.show();
       }
-    //   libraryInstance.getBooksForUser({from: App.account, gas:3000000});
-    //   return libraryInstance.curUserBooks();
-    // }).then(function(userBooks) {
-    //   var numCurBooks = libraryInstance.numCurUserBooks();
-    //   for (var i = 1; i <= numCurBooks; i++)
-    //   {
-    //     var id = userBooks[i][0];
-    //     var name = userBooks[i][1];
-    //     var author = userBooks[i][2];
-    //     // Render Return Book List
-    //     var returnBookOption = "<option value='" + id + "' >" + name + " - " + author + "</ option>"
-    //     returnBookSelect.append(returnBookOption);
-    //   }
     }).catch(function(error) {
       console.warn(error);
     });
@@ -180,7 +132,7 @@ App = {
     App.contracts.Library.deployed().then(function(instance) {
       return instance.checkout(checkoutBookId, { from: App.account });
     }).then(function(result) {
-      // Wait for votes to update
+      
       $("#content").hide();
       $("#loader").show();
 
@@ -195,7 +147,7 @@ App = {
     App.contracts.Library.deployed().then(function(instance) {
       return instance.returnBook(returnBookId, { from: App.account });
     }).then(function(result) {
-      // Wait for votes to update
+      
       $("#content").hide();
       $("#loader").show();
 
@@ -211,7 +163,7 @@ App = {
     App.contracts.Library.deployed().then(function(instance) {
       return instance.addBook(bookName, authorName, { from: App.account });
     }).then(function(result) {
-      // Wait for votes to update
+      
       $("#content").hide();
       $("#loader").show();
   
@@ -226,7 +178,7 @@ App = {
     App.contracts.Library.deployed().then(function(instance) {
       return instance.removeBook(removeBookId, { from: App.account });
     }).then(function(result) {
-      // Wait for votes to update
+      
       $("#content").hide();
       $("#loader").show();
 
