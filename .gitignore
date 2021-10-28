@@ -1,3 +1,10 @@
+# Git
+.github
+.gitattributes
+
+# Solidity Build files
+build
+
 # Logs
 logs
 *.log
